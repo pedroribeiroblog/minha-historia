@@ -172,23 +172,28 @@
         </div>
     </div>
 
-  <script>
+<script>
         function goToPage(pageNum, btnElement) {
-            const pdfName = "livro.pdf"; 
-            const frame = document.getElementById('pdf-frame');
+            const pdfName = "livro.pdf";
+            const container = document.getElementById('pdf-container');
             
-            // --- O TRUQUE ESTÁ AQUI ---
-            // Adicionamos um número aleatório (Date.now) no link.
-            // Isso faz o navegador achar que é um arquivo "novo" e força ele a ir para a página.
-            // O formato fica: livro.pdf?v=123456#page=10
-            frame.src = `${pdfName}?v=${Date.now()}#page=${pageNum}&view=FitH`;
+            // --- A MÁGICA DA FORÇA BRUTA ---
+            // Em vez de mudar o src, nós recriamos o iframe do zero.
+            // Isso obriga o navegador a carregar a página específica.
+            container.innerHTML = `
+                <iframe id="pdf-frame" 
+                        src="${pdfName}#page=${pageNum}&view=FitH" 
+                        title="Leitor de PDF"
+                        style="width: 100%; height: 100%; border: none;">
+                </iframe>
+            `;
 
-            // Destaca o botão clicado (Visual)
+            // Atualiza a cor do botão clicado
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
             if(btnElement) btnElement.classList.add('active-chapter');
         }
 
-        // Marca o primeiro botão como ativo ao carregar
+        // Carrega a primeira página e marca o botão ao abrir o site
         window.onload = function() {
             const firstBtn = document.querySelector('.nav-btn');
             if(firstBtn) firstBtn.classList.add('active-chapter');
