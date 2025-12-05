@@ -158,16 +158,16 @@
 
     <!-- ÁREA DE LEITURA DO PDF -->
     <div id="pdf-container">
-        <!-- O PDF DEVE SE CHAMAR "livro.pdf" -->
+        <!-- O PDF DEVE SE CHAMAR "Minha História, Minha Vida.pdf" -->
         <!-- O parâmetro #page=1 diz para começar na página 1 -->
         <!-- O parâmetro &view=FitH diz para ajustar à largura da tela -->
-        <iframe id="pdf-frame" src="livro.pdf#page=1&view=FitH" title="Leitor de PDF"></iframe>
+        <iframe id="pdf-frame" src="Minha História, Minha Vida.pdf#page=1&view=FitH" title="Leitor de PDF"></iframe>
         
         <!-- Mensagem caso o PDF não carregue -->
         <div id="error-message" class="hidden absolute inset-0 flex items-center justify-center bg-white z-0">
             <div class="text-center p-8">
                 <h3 class="text-xl font-bold text-red-600">PDF Não Encontrado</h3>
-                <p class="mt-2 text-gray-600">Certifique-se de que o arquivo do livro foi enviado para o GitHub<br>com o nome exato: <strong>livro.pdf</strong></p>
+                <p class="mt-2 text-gray-600">Certifique-se de que o arquivo do livro foi enviado para o GitHub<br>com o nome exato: <strong>Minha História, Minha Vida.pdf</strong></p>
             </div>
         </div>
     </div>
@@ -175,7 +175,7 @@
     <script>
         function goToPage(pageNum, btnElement) {
             // Nome do arquivo PDF (deve ser igual ao que você subiu)
-            const pdfName = "livro.pdf"; 
+            const pdfName = "Minha História, Minha Vida.pdf"; 
             
             const frame = document.getElementById('pdf-frame');
             
