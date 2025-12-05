@@ -1,151 +1,932 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leitor: Minha História, Minha Vida</title>
+    <title>Minha História, Minha Vida - Pedro Gonçalves Ribeiro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Montserrat', sans-serif; background-color: #f0f9ff; height: 100vh; margin: 0; display: flex; flex-direction: column; }
+        :root {
+            /* Paleta Azul do Céu */
+            --sky-lightest: #f0f9ff; /* Fundo principal */
+            --sky-light: #e0f2fe;    /* Sidebar e cartões */
+            --sky-medium: #7dd3fc;   /* Detalhes sutis */
+            --sky-strong: #0284c7;   /* Títulos e destaques */
+            --sky-dark: #0c4a6e;     /* Texto principal */
+            --paper: #ffffff;
+        }
+
+        body {
+            background-color: var(--sky-lightest);
+            color: var(--sky-dark);
+            font-family: 'Merriweather', serif;
+            line-height: 1.9;
+            font-size: 1.125rem;
+            background-image: linear-gradient(to bottom right, #f0f9ff, #e0f2fe);
+            background-attachment: fixed;
+        }
+
+        /* Títulos */
+        h1, h2, h3, .font-title {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--sky-dark);
+        }
+
+        /* Menu Lateral */
+        .sidebar {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-right: 1px solid var(--sky-light);
+            backdrop-filter: blur(5px);
+        }
         
-        /* Layout para Desktop: Lado a Lado */
-        @media (min-width: 1024px) {
-            body { flex-direction: row; }
-            #sidebar { width: 350px; height: 100vh; overflow-y: auto; }
-            #pdf-container { flex-grow: 1; height: 100vh; }
-        }
-
-        /* Layout para Mobile: Menu em cima, PDF embaixo */
-        @media (max-width: 1023px) {
-            #sidebar { width: 100%; height: 30vh; overflow-y: auto; }
-            #pdf-container { width: 100%; height: 70vh; }
-        }
-
-        .nav-btn {
+        .nav-item {
             display: block;
-            width: 100%;
-            text-align: left;
-            padding: 10px 15px;
-            border-bottom: 1px solid #bae6fd;
-            color: #0c4a6e;
-            transition: background 0.2s;
-            background: white;
+            padding: 0.75rem 1rem;
+            color: #0369a1;
             font-size: 0.9rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            text-decoration: none;
+            border-radius: 0 8px 8px 0;
         }
-        .nav-btn:hover { background-color: #e0f2fe; color: #0284c7; font-weight: bold; }
-        .active-chapter { background-color: #0284c7; color: white !important; }
-        
-        iframe { width: 100%; height: 100%; border: none; }
+
+        .nav-item:hover {
+            background-color: var(--sky-light);
+            border-left-color: var(--sky-strong);
+            color: var(--sky-strong);
+            padding-left: 1.5rem;
+        }
+
+        /* Cartões de Conteúdo */
+        .chapter-card {
+            background: var(--paper);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            border-radius: 12px;
+            border-top: 6px solid var(--sky-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, var(--sky-medium), var(--sky-strong));
+        }
+
+        /* Data/Badges */
+        .date-badge {
+            display: inline-block;
+            background-color: var(--sky-light);
+            color: var(--sky-strong);
+            padding: 0.35rem 1.2rem;
+            border-radius: 9999px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Citações */
+        blockquote {
+            border-left: 5px solid var(--sky-medium);
+            padding-left: 1.5rem;
+            margin: 2.5rem 0;
+            font-style: italic;
+            color: #475569;
+            background-color: #f8fafc;
+            padding: 2rem;
+            border-radius: 0 12px 12px 0;
+        }
+
+        /* Capitulares */
+        .drop-cap::first-letter {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5em;
+            float: left;
+            line-height: 0.8;
+            margin-right: 0.15em;
+            color: var(--sky-strong);
+            font-weight: 800;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--sky-strong);
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 50;
+            display: none;
+        }
+
+        @media (max-width: 1023px) {
+            .mobile-menu-btn { display: block; }
+            .sidebar { display: none; position: fixed; top: 0; left: 0; height: 100%; z-index: 40; width: 80%; }
+            .sidebar.active { display: block; }
+        }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <!-- ÍNDICE LATERAL -->
-    <div id="sidebar" class="bg-white border-r border-sky-200 shadow-lg z-10">
-        <div class="p-4 bg-sky-100 border-b border-sky-300 sticky top-0">
-            <h1 class="text-lg font-bold text-sky-900">Índice do Livro</h1>
-            <p class="text-xs text-sky-700">Clique para ler o capítulo</p>
-        </div>
-        
-        <!-- Lista de Capítulos (Ajuste o número da página no 'data-page') -->
-        <!-- Exemplo: data-page="10" vai para a página 10 do PDF -->
-        <nav id="chapter-list">
-            <button class="nav-btn" onclick="goToPage(1, this)">Capa</button>
-            <button class="nav-btn" onclick="goToPage(6, this)">Prefácio: A Vida como Testemunho</button>
-            <button class="nav-btn" onclick="goToPage(9, this)">Introdução: No Silêncio, Deus Fala</button>
-            <button class="nav-btn" onclick="goToPage(10, this)">1965: Meus Pais</button>
-            <button class="nav-btn" onclick="goToPage(14, this)">1966: Raízes e Nascimento</button>
-            <button class="nav-btn" onclick="goToPage(21, this)">1974: A Luz da Lamparina</button>
-            <button class="nav-btn" onclick="goToPage(26, this)">1977: O Menino que Voltou</button>
-            <button class="nav-btn" onclick="goToPage(31, this)">1980: Primeiros Passos</button>
-            <button class="nav-btn" onclick="goToPage(36, this)">1982: O Despertar</button>
-            <button class="nav-btn" onclick="goToPage(43, this)">1982: Cecy, Raízes e Asas</button>
-            <button class="nav-btn" onclick="goToPage(49, this)">1986: A Fábrica de Calçados</button>
-            <button class="nav-btn" onclick="goToPage(54, this)">1986: Rita Carretel e a Ida para SP</button>
-            <button class="nav-btn" onclick="goToPage(58, this)">1986: Vida Corrida e Banco Itaú</button>
-            <button class="nav-btn" onclick="goToPage(61, this)">1987: Márcia e Silvia</button>
-            <button class="nav-btn" onclick="goToPage(66, this)">1987: Inácio</button>
-            <button class="nav-btn" onclick="goToPage(70, this)">1987: O Anjo da Guarda</button>
-            <button class="nav-btn" onclick="goToPage(79, this)">1987: Caminhada pelo Brasil</button>
-            <button class="nav-btn" onclick="goToPage(87, this)">1987: O Medo na Estrada</button>
-            <button class="nav-btn" onclick="goToPage(96, this)">1987: A Fome em Fortaleza</button>
-            <button class="nav-btn" onclick="goToPage(99, this)">1988: A Solidão</button>
-            <button class="nav-btn" onclick="goToPage(106, this)">1988: Chegada em Jacareí</button>
-            <button class="nav-btn" onclick="goToPage(115, this)">1988: Albergue e Pousada</button>
-            <button class="nav-btn" onclick="goToPage(124, this)">1988: Escritório de Sidney</button>
-            <button class="nav-btn" onclick="goToPage(130, this)">1988: Luís Henrique</button>
-            <button class="nav-btn" onclick="goToPage(137, this)">1988: Marcos</button>
-            <button class="nav-btn" onclick="goToPage(144, this)">1990: SAAE e Convento</button>
-            <button class="nav-btn" onclick="goToPage(152, this)">1990: A Criança em Silêncio</button>
-            <button class="nav-btn" onclick="goToPage(158, this)">1994: Retorno ao SAAE</button>
-            <button class="nav-btn" onclick="goToPage(162, this)">1995: Joel e os Gatos</button>
-            <button class="nav-btn" onclick="goToPage(167, this)">1999: A Queda e a Justiça</button>
-            <button class="nav-btn" onclick="goToPage(175, this)">2000: Bebedeira e Amor</button>
-            <button class="nav-btn" onclick="goToPage(183, this)">2001: Silvana</button>
-            <button class="nav-btn" onclick="goToPage(187, this)">2009: Fátima</button>
-            <button class="nav-btn" onclick="goToPage(191, this)">2009: Cláudia</button>
-            <button class="nav-btn" onclick="goToPage(197, this)">2009: Susana</button>
-            <button class="nav-btn" onclick="goToPage(202, this)">2010: Neusa</button>
-            <button class="nav-btn" onclick="goToPage(208, this)">2013: Eduardo</button>
-            <button class="nav-btn" onclick="goToPage(213, this)">2013: Leandro</button>
-            <button class="nav-btn" onclick="goToPage(218, this)">2015: Noites de Estudo</button>
-            <button class="nav-btn" onclick="goToPage(222, this)">2016: Reflexões aos 50</button>
-            <button class="nav-btn" onclick="goToPage(226, this)">2018: A Aposentadoria</button>
-            <button class="nav-btn" onclick="goToPage(231, this)">2019: Rua Hollywood</button>
-            <button class="nav-btn" onclick="goToPage(235, this)">2020: Jeovani</button>
-            <button class="nav-btn" onclick="goToPage(242, this)">2022: Amilton</button>
-            <button class="nav-btn" onclick="goToPage(246, this)">2023: Frei Sidney</button>
-            <button class="nav-btn" onclick="goToPage(250, this)">2023: Conversão e Carmo</button>
-            <button class="nav-btn" onclick="goToPage(253, this)">2024: Café com Silvana</button>
-            <button class="nav-btn" onclick="goToPage(255, this)">2024: Ilma</button>
-            <button class="nav-btn" onclick="goToPage(260, this)">2024: Casa de Esperança</button>
-            <button class="nav-btn" onclick="goToPage(265, this)">2024: Gratidão</button>
-            <button class="nav-btn" onclick="goToPage(270, this)">2024: Um Dia de Ordem</button>
-            <button class="nav-btn" onclick="goToPage(276, this)">2025: O Tratamento</button>
-            <button class="nav-btn" onclick="goToPage(280, this)">2025: Muito Obrigado</button>
-            <button class="nav-btn" onclick="goToPage(292, this)">Trajetória e Currículo</button>
-        </nav>
-    </div>
+    <button class="mobile-menu-btn lg:hidden" onclick="document.querySelector('.sidebar').classList.toggle('active')">
+        ☰
+    </button>
 
-    <!-- ÁREA DE LEITURA DO PDF -->
-    <div id="pdf-container" class="bg-gray-200 relative">
-        <!-- Substitua 'livro.pdf' pelo nome EXATO do seu arquivo no GitHub -->
-        <iframe id="pdf-frame" src="livro.pdf#page=1&view=FitH" title="Leitor de PDF"></iframe>
+    <div class="flex flex-col lg:flex-row min-h-screen">
         
-        <!-- Aviso caso o PDF não carregue -->
-        <div id="no-pdf" class="hidden absolute inset-0 flex items-center justify-center bg-white p-8 text-center">
-            <div>
-                <h3 class="text-xl font-bold text-red-600 mb-2">PDF Não Encontrado</h3>
-                <p>Certifique-se de que o arquivo do livro está no repositório com o nome correto.</p>
-                <p class="text-sm text-gray-500 mt-4">Nome esperado: <strong>livro.pdf</strong></p>
+        <!-- MENU LATERAL (ÍNDICE) -->
+        <aside class="w-full lg:w-1/4 lg:h-screen lg:sticky lg:top-0 overflow-y-auto sidebar p-6">
+            <div class="mb-10 text-center">
+                <div class="w-16 h-16 bg-sky-200 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl">📖</div>
+                <h1 class="font-title text-xl font-bold tracking-wide text-sky-900">MINHA HISTÓRIA,<br>MINHA VIDA</h1>
+                <p class="text-xs mt-2 text-sky-600 font-bold uppercase tracking-widest">Pedro Gonçalves Ribeiro</p>
             </div>
-        </div>
+            
+            <nav class="space-y-1 pb-20">
+                <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Início</p>
+                <a href="#prefacio" class="nav-item">Prefácio & Introdução</a>
+                
+                <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mt-6 mb-2">Raízes (1965-1986)</p>
+                <a href="#1965" class="nav-item">1965 - Meus Pais</a>
+                <a href="#1966" class="nav-item">1966 - Nascimento e Raízes</a>
+                <a href="#1974" class="nav-item">1974 - A Luz da Lamparina</a>
+                <a href="#1977" class="nav-item">1977 - O Menino que Voltou</a>
+                <a href="#1980" class="nav-item">1980 - Primeiros Trabalhos</a>
+                <a href="#1982a" class="nav-item">1982 - O Despertar</a>
+                <a href="#1982b" class="nav-item">1982 - Cecy: Raízes e Asas</a>
+                <a href="#1986a" class="nav-item">1986 - Máquina de Costura</a>
+
+                <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mt-6 mb-2">A Jornada (1986-1988)</p>
+                <a href="#1986b" class="nav-item">1986 - Ida para São Paulo</a>
+                <a href="#1986c" class="nav-item">1986 - Vida Corrida em SP</a>
+                <a href="#1987a" class="nav-item">1987 - Márcia e Silvia</a>
+                <a href="#1987b" class="nav-item">1987 - Inácio</a>
+                <a href="#1987c" class="nav-item">1987 - O Anjo da Guarda</a>
+                <a href="#1987d" class="nav-item">1987 - Caminhada pelo Brasil</a>
+                <a href="#1987e" class="nav-item">1987 - O Medo na Estrada</a>
+                <a href="#1987f" class="nav-item">1987 - A Fome em Fortaleza</a>
+                <a href="#1988a" class="nav-item">1988 - A Solidão</a>
+
+                <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mt-6 mb-2">Jacareí: O Lar (1988-2000)</p>
+                <a href="#1988b" class="nav-item">1988 - Chegada em Jacareí</a>
+                <a href="#1988c" class="nav-item">1988 - Albergue e Pousada</a>
+                <a href="#1988d" class="nav-item">1988 - Escritório de Sidney</a>
+                <a href="#1988e" class="nav-item">1988 - Luís Henrique</a>
+                <a href="#1988f" class="nav-item">1988 - Marcos</a>
+                <a href="#1990a" class="nav-item">1990 - SAAE e Convento</a>
+                <a href="#1990b" class="nav-item">1990 - A Criança em Silêncio</a>
+                <a href="#1994" class="nav-item">1994 - Retorno ao SAAE</a>
+                <a href="#1995" class="nav-item">1995 - Joel</a>
+                <a href="#1999" class="nav-item">1999 - Queda e Superação</a>
+
+                <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mt-6 mb-2">Maturidade (2000-2025)</p>
+                <a href="#2000" class="nav-item">2000 - Bebedeira e Amor</a>
+                <a href="#2001" class="nav-item">2001 - Silvana</a>
+                <a href="#2009a" class="nav-item">2009 - Fátima</a>
+                <a href="#2009b" class="nav-item">2009 - Cláudia</a>
+                <a href="#2009c" class="nav-item">2009 - Susana</a>
+                <a href="#2010" class="nav-item">2010 - Neusa</a>
+                <a href="#2013a" class="nav-item">2013 - Eduardo</a>
+                <a href="#2013b" class="nav-item">2013 - Leandro</a>
+                <a href="#2015" class="nav-item">2015 - Noites de Estudo</a>
+                <a href="#2016" class="nav-item">2016 - Reflexões aos 50</a>
+                <a href="#2018" class="nav-item">2018 - Aposentadoria</a>
+                <a href="#2019" class="nav-item">2019 - Rua Hollywood</a>
+                <a href="#2020" class="nav-item">2020 - Jeovani</a>
+                <a href="#2022" class="nav-item">2022 - Amilton</a>
+                <a href="#2023a" class="nav-item">2023 - Frei Sidney</a>
+                <a href="#2023b" class="nav-item">2023 - Conversão e Carmo</a>
+                <a href="#2024a" class="nav-item">2024 - Café com Silvana</a>
+                <a href="#2024b" class="nav-item">2024 - Ilma</a>
+                <a href="#2024c" class="nav-item">2024 - Casa de Esperança</a>
+                <a href="#2024d" class="nav-item">2024 - Gratidão</a>
+                <a href="#2024e" class="nav-item">2024 - Um Dia de Ordem</a>
+                <a href="#2025a" class="nav-item">2025 - O Tratamento</a>
+                <a href="#2025b" class="nav-item">2025 - Muito Obrigado</a>
+                <a href="#trajetoria" class="nav-item">Trajetória e Currículo</a>
+            </nav>
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="w-full lg:w-3/4 p-6 lg:p-20 max-w-5xl mx-auto">
+            
+            <!-- Capa Digital -->
+            <div class="text-center mb-24 py-20 border-b border-sky-200 relative overflow-hidden bg-white rounded-3xl shadow-sm">
+                <div class="absolute top-0 left-0 w-full h-2 bg-sky-500"></div>
+                <h1 class="font-title text-5xl lg:text-7xl font-bold text-sky-900 mb-6 leading-tight">Minha História,<br>Minha Vida</h1>
+                <p class="text-xl text-sky-600 italic mb-10 font-light">Um Testemunho de Fé, Memória e Transformação Diária</p>
+                <div class="inline-block bg-sky-50 px-8 py-3 rounded-full text-sky-800 font-bold tracking-wide border border-sky-100">PEDRO GONÇALVES RIBEIRO</div>
+                <p class="mt-12 text-sm text-gray-400 font-bold uppercase tracking-widest">JACAREÍ - 2025</p>
+            </div>
+
+            <!-- Prefácio e Introdução -->
+            <section id="prefacio" class="chapter-card border-l-8 border-l-sky-500">
+                <h2 class="text-3xl font-title text-center mb-8 text-sky-800">Prefácio: A Vida como Testemunho</h2>
+                <p class="mb-6 drop-cap">
+                    Este livro é uma celebração da força de vontade e da determinação de alguém que, ao longo da vida, enfrentou desafios, superou obstáculos e construiu sua história com trabalho árduo e fé inabalável.
+                </p>
+                <p class="mb-6">
+                    A trajetória de Pedro Gonçalves Ribeiro não é apenas uma sequência de fatos, datas e empregos. É um testemunho vivo de que a vida comum pode ser extraordinária quando vivida com propósito, disciplina e entrega a Deus.
+                </p>
+                <p class="mb-6">
+                    Pedro não é o protagonista de uma história comum. É o exemplo de alguém que, diante da necessidade de recomeçar após o coma, após o silêncio da infância, após o peso do bullying, não hesitou. Abraçou as oportunidades. Encarou as dificuldades. E seguiu em frente, com coragem silenciosa. Desde sua chegada a Jacareí, ele não apenas se estabeleceu. Moldou seu destino. Com responsabilidade. Com oração. Com um compromisso profundo com o que é certo.
+                </p>
+                <blockquote class="text-lg text-sky-800">"Aquele que persevera até o fim será salvo." (Mateus 24,13)</blockquote>
+                
+                <div class="mt-16 pt-10 border-t border-gray-100">
+                    <h3 class="text-2xl font-title mb-6 text-sky-700 text-center">Introdução: No silêncio, Deus fala</h3>
+                    <p class="mb-6">
+                        Este livro nasce de um diário que começou em 1966 — mesmo sendo no dia em que nasci — e que, por mais de 59 anos, registrou não apenas dias, mas presenças: de Deus, da família, dos amigos, dos sonhos. Não é um diário comum. É um testemunho. De quem acredita que a fé não vive em grandes gestos, mas no café da manhã, na oração matinal, no perdão difícil.
+                    </p>
+                    <p class="mb-6 font-semibold text-center text-sky-600">
+                        "Senhor, a quem iremos nós? Tu tens palavras de vida eterna." (João 6,68)
+                    </p>
+                </div>
+            </section>
+
+            <!-- 1965: Meus Pais -->
+            <section id="1965" class="chapter-card">
+                <span class="date-badge">31/07/1965</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Meus Pais: A Educação do Chicote e o Amor em Silêncio</h2>
+                
+                <p class="mb-6 drop-cap">
+                    Meus pais, Pedro Gonçalves Neto e Maria de Lourdes Barbosa Neto, foram criados em um tempo de poucas palavras e muitas obrigações. Eles vieram de famílias grandes, com muitos irmãos, e cresceram em um mundo onde a educação era dura, muitas vezes feita com chicote. Foi assim que minha mãe, Maria de Lourdes, foi educada. E foi assim que, pelo menos comigo o filho mais velho, ela tentou manter a ordem. Se casaram em 31 de julho de 1965.
+                </p>
+
+                <h3 class="text-xl font-bold text-sky-700 mt-8 mb-4">Meu Pai: Pedro Gonçalves Neto</h3>
+                <p class="mb-6">
+                    Meu pai era um homem calmo, de palavras poucas, mas de coração bom. Ele não era de brigar. Nunca me bateu. Nunca levantou a voz. Trabalhou como lavador de carros, fez serviços na roça, capinava matos, e chegou a trabalhar na Prefeitura de Itanhandu. Viveu bem seus anos. Depois, foi morar com minhas irmãs, primeiro com Cristina, depois com Elsa, que cuidaram dele até seu último dia. Foi enterrado em São Sebastião do Rio Verde, Minas Gerais, dia 21/05/2021. Ele me deixou o exemplo de um homem sério, honesto, de palavra.
+                </p>
+
+                <h3 class="text-xl font-bold text-sky-700 mt-8 mb-4">Minha Mãe: Maria de Lourdes Barbosa Neto</h3>
+                <p class="mb-6">
+                    Minha mãe foi mais severa. Ela educou com o chicote. Pelo menos comigo. Ela era do lar, sabia costurar. Depois da separação, começou a trabalhar como costureira e mudou-se para Itajubá, onde recomeçou a vida com as próprias mãos. Foi bem controladora, mas com o tempo aprendi: aquilo não era só autoridade. Era medo. Medo de perder os filhos. Medo de falhar. E, apesar do chicote, sei que ela me amava.
+                </p>
+                
+                <blockquote class="mt-8">
+                    "Senhor, graças por meus pais. Por aqueles que me ensinaram com o exemplo, mesmo quando não souberam com palavras. Que o descanso eterno seja deles, e a luz perpétua os ilumine."
+                </blockquote>
+            </section>
+
+            <!-- 1966: Raízes -->
+            <section id="1966" class="chapter-card">
+                <span class="date-badge">27/08/1966</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Raízes: Avós, Pais, Irmãos e o Chão de Minha Vida</h2>
+                <p class="mb-6 drop-cap">
+                    O nascimento em casa, em Rio dos Santos, no munícipio de São Sebastião do Rio Verde, MG, às 21h00, sob um céu escuro e cheio de estrelas. Abri meus olhos pela primeira vez não em um hospital, mas no silêncio do campo. Fui o primeiro filho da família. Depois de mim vieram: Orestes Oscar (1967), Maria Elsa (1970), Maria Regina (1971), Valdete Gonçalves (1972) e depois, em 1980, viria Cristina Gonçalves.
+                </p>
+                <p class="mb-6">
+                    Nasci num lugar pequeno, com vacas, porcos, galinhas, um riacho raso. Corríamos pelo pasto com meu irmão Orestes, que era manso, simples, com certas dificuldades, mas era meu companheiro. Era meu mundo.
+                </p>
+                <p class="mb-6">
+                    <strong>O Símbolo da Infância:</strong> A casa não era grande, mas tinha um fogão a lenha bem estruturado. Era nele que minha avó Maria Eva e minha mãe faziam o pão de erva-doce. Um pão que não se compra, se herda. Quando abriam a porta do forno, o vapor subia como uma oração. Era mais que comida. Era saciedade. Era paz.
+                </p>
+                <p class="mb-6">
+                    Meus avós maternos, Oscar Ribeiro e Maria Eva, tinham um casarão grande. Ela era branda, humilde. Ele, de bondade, mas com jeito bravo. Meus avós paternos, Pedro Gonçalves Filho e Isaura Ribeiro Barbosa, eram gente da terra.
+                </p>
+            </section>
+
+            <!-- 1974: A Lamparina -->
+            <section id="1974" class="chapter-card">
+                <span class="date-badge">06/05/1974</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Menino que Estudava à Luz da Lamparina</h2>
+                <p class="mb-6 drop-cap">
+                    Pedro Gonçalves Ribeiro nunca teve muito. Não teve eletricidade em casa nos primeiros anos. Não teve livros novos. Mas teve algo mais forte: vontade de aprender. Desde cedo, sentia que a educação era a ponte entre o campo onde cresceu e o futuro que sonhava.
+                </p>
+                <p class="mb-6">
+                    Estudei na Escola Felipe dos Santos, em Itanhandu. Uma escola simples, com chão de terra batida. À noite, depois do jantar, pegava o caderno e a lamparina. A luz tremulava na parede, as sombras dançavam, e eu estudava. Matemática, Geografia, Ciências. Lia e relia, até memorizar. Porque sabia: aquele conhecimento era meu tesouro.
+                </p>
+                <p class="mb-6">
+                    O caminho para a escola era de terra. Pedro caminhava. Às vezes chegava molhado da chuva, outras coberto de poeira. Mas nunca faltou. Porque sabia: cada passo era um degrau. Foi na matemática que encontrei meu caminho. Os números não mentem, são justos. E foi por isso que escolhi a contabilidade.
+                </p>
+            </section>
+
+            <!-- 1977: O Acidente -->
+            <section id="1977" class="chapter-card">
+                <span class="date-badge">05/04/1977</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Menino que Voltou da Escuridão</h2>
+                <p class="mb-6 drop-cap">
+                    Em 1977, aos 11 anos, tudo parou. Estava no escorregador da escola. Uma brincadeira. Um empurrão. Uma queda. E então, a escuridão. Fiquei em coma por oito meses.
+                </p>
+                <p class="mb-6">
+                    Oito meses sem ver a luz do dia. Sem ouvir a voz da minha mãe. Sem correr com meu irmão. Foi o maior desafio da minha vida. Um abismo. Mas não fui sozinho. Minha família orou. Cuidou. Acreditou. E quando acordei, foi como se nascesse de novo. Voltei à escola, fiz exames rigorosos e, com a graça de Deus, avancei de série.
+                </p>
+                <blockquote class="mt-8">
+                    "Aprendi: a vida não é só o que acontece. É o que você faz depois."
+                </blockquote>
+                <p class="mb-6">
+                    Esses anos — entre a infância, o coma, o retorno, o estudo — foram os alicerces da minha vida. Aprendi que a educação não é só ler e escrever. É resistir. É levantar depois da queda.
+                </p>
+            </section>
+
+            <!-- 1980: Primeiros Passos -->
+            <section id="1980" class="chapter-card">
+                <span class="date-badge">03/03/1980</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Os Primeiros Passos no Trabalho</h2>
+                <p class="mb-6 drop-cap">
+                    A adolescência chegou com uma certeza: eu precisava trabalhar. Não por luxo, mas por dignidade. Em 1980, comecei a trabalhar no restaurante da beira da estrada, perto do trevo de Capivari. Lá aprendi a verdadeira escola da vida: atender clientes, lidar com o ritmo acelerado, respeitar o trabalho alheio.
+                </p>
+                <p class="mb-6">
+                    Em 1981, mudei para a lanchonete do Macário, no posto de gasolina de Itanhandu. Preparava lanches, atendia caminhoneiros. Era um lugar de passagem, gente de todo canto. Aprendi que um café bem servido pode aquecer mais que o corpo. Pode aquecer a alma. Foi ali que desenvolvi habilidades que levaria para sempre: atenção ao detalhe, pontualidade, respeito pelo próximo.
+                </p>
+            </section>
+
+            <!-- 1982: O Despertar -->
+            <section id="1982a" class="chapter-card">
+                <span class="date-badge">06/02/1982</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Despertar: O Corpo que Começou a Falar</h2>
+                <p class="mb-6 drop-cap">
+                    Em 6 de fevereiro de 1982, eu tinha 15 anos. Foi quando conheci Heitor. Ele se aproximou com calma, com intimidade. E foi ele quem começou a me tocar, com um gesto leve que me fez sentir algo novo.
+                </p>
+                <p class="mb-6">
+                    Depois veio Reinaldo, com seu olhar sagaz, e Paulo César, que foi um mestre. Com Paulo César, entendi que o prazer não era pecado, era revelação. Entendi que talvez eu não fosse como os outros rapazes, que meu olhar para os homens era mais fundo.
+                </p>
+                <p class="mb-6">
+                    Esse período foi um despertar. Não só para o sexo, mas para a vida. Entendi que o corpo é sagrado, o desejo é natural e a identidade não se escolhe, se descobre. Mesmo na confusão, Deus estava ali, me guiando, me mostrando quem eu era.
+                </p>
+            </section>
+
+            <!-- 1982: Cecy -->
+            <section id="1982b" class="chapter-card">
+                <span class="date-badge">15/11/1982</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Cecy, Raízes e Asas</h2>
+                <p class="mb-6 drop-cap">
+                    Em 1982, fui contratado por Cecy Roriz de Souza para ser seu caseiro. Ela não foi só minha patroa, foi uma lição de vida. Ensinou-me a cozinhar de verdade, com gosto e carinho.
+                </p>
+                <p class="mb-6">
+                    Cecy era uma mulher forte, nascida em Paracatu. Foi fiscal do Ministério do Trabalho, respeitada por todos. Tinha mãos firmes e um coração que acolhia. Com ela, entendi que a responsabilidade não se aprende em livros, mas no dia a dia, no gesto simples. Ela me mostrou que "Raízes não prendem. Sustentam. E é delas que nascem asas."
+                </p>
+            </section>
+
+            <!-- 1986: Malharia Brisella -->
+            <section id="1986a" class="chapter-card">
+                <span class="date-badge">02/05/1986</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Som da Máquina de Costura</h2>
+                <p class="mb-6 drop-cap">
+                    Dei um novo passo ao ingressar na Malharia Brisella Ltda, uma fábrica de calçados em Itanhandu. No teste de admissão, quebrei duas agulhas de tanto nervoso. Mas o dono, Élcio, sorriu e disse: "Pode começar na segunda-feira".
+                </p>
+                <p class="mb-6">
+                    Trabalhei na costura dos calçados All Star. Era um trabalho minucioso, exigia precisão. Ali, entre máquinas e tecidos, entendi o valor da qualidade. Foi mais que um emprego, foi uma lição de ética: o trabalho honesto não precisa de aplausos, só de dedicação. Fiquei lá até agosto de 1986, quando decidi mudar para São Paulo.
+                </p>
+            </section>
+
+            <!-- 1986: Ida para SP -->
+            <section id="1986b" class="chapter-card">
+                <span class="date-badge">20/11/1986</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Rita Carretel: A Mulher que me Levou para São Paulo</h2>
+                <p class="mb-6 drop-cap">
+                    Foi Rita Carretel quem me levou para São Paulo. Uma mulher simples de coração grande, que me pegou pela mão e disse: "Vamos. É hora de você crescer".
+                </p>
+                <p class="mb-6">
+                    Antes de chegar à capital, ficamos uma semana na casa do irmão dela em Itaguacetuba. Depois, fui para São Paulo, onde Vanda (filha de Rita) já me esperava. Morei com rapazes amigos dela, depois numa pousada de irmãs protestantes. Rita não precisava de mim, mas me levou. Foi um salto de fé. Tudo começou com uma mulher corajosa que acreditou que eu poderia ser mais do que era.
+                </p>
+            </section>
+
+            <!-- 1986: Vida Corrida -->
+            <section id="1986c" class="chapter-card">
+                <span class="date-badge">27/11/1986</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Vida Corrida em São Paulo e o Banco Itaú</h2>
+                <p class="mb-6 drop-cap">
+                    Cheguei a São Paulo com uma certeza: ia trabalhar. Comecei numa lanchonete no Itaim Bibi, mas sonhava com mais. Decidi tentar uma vaga no Banco Itaú e fui aprovado.
+                </p>
+                <p class="mb-6">
+                    Comecei como escriturário e logo fui promovido a caixa. O deslocamento era longo — duas horas de ida e volta todos os dias — mas não reclamei. No banco, aprendi a importância da exatidão, o valor da ética e a força da determinação. Mostrei que, mesmo vindo do campo, eu podia ocupar um lugar no mundo corporativo com dignidade.
+                </p>
+            </section>
+
+            <!-- 1987: Marcia e Silvia -->
+            <section id="1987a" class="chapter-card">
+                <span class="date-badge">12/01/1987</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Márcia, Silvia e Eu: A Verdade do Serviço</h2>
+                <p class="mb-6 drop-cap">
+                    Para complementar a renda, trabalhei à noite como copeiro para Márcia Roriz Trankesi e Silvia. Márcia era cineasta. Eu era o chef de cozinha: preparava refeições, servia, limpava.
+                </p>
+                <p class="mb-6">
+                    Eu não participava das conversas sobre cinema e arte. Eu estava ali para servir. E o fazia com disciplina. Enquanto de dia eu era caixa do Banco Itaú, de noite eu era copeiro. Eram dois mundos, mas o mesmo homem. Aprendi que posso servir com dignidade em qualquer lugar, sem me perder.
+                </p>
+            </section>
+
+            <!-- 1987: Inácio -->
+            <section id="1987b" class="chapter-card">
+                <span class="date-badge">23/01/1987</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Inácio, O Quarto que Conheci</h2>
+                <p class="mb-6 drop-cap">
+                    Em janeiro de 1987, conheci Inácio Oliveira. Ele trabalhava num hospital. Tinha olhos claros com um brilho penetrante e uma simplicidade rara.
+                </p>
+                <p class="mb-6">
+                    Não houve gestos grandes, mas foi um encontro de almas. Ele me ouvia sem julgar. Com ele, senti pela primeira vez: "Alguém me vê". Inácio me ensinou que a simplicidade é mais forte que o brilho e que o acolhimento é uma forma de oração.
+                </p>
+            </section>
+
+            <!-- 1987: Anjo da Guarda -->
+            <section id="1987c" class="chapter-card">
+                <span class="date-badge">15/06/1987</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Encontro com Meu Anjo da Guarda</h2>
+                <p class="mb-6 drop-cap">
+                    Caminhando pela rua Alegrete, no bairro Sumaré, ao entardecer, senti um impulso incontrolável de olhar para trás. E vi. Um ser todo de branco, com luz própria. Não era humano, era divino.
+                </p>
+                <p class="mb-6">
+                    Senti uma mensagem clara no coração: "Estou aqui. Você está em perigo. Mas tudo ficará bem." Ele desapareceu suavemente. Aquele encontro mudou minha vida para sempre. Solidificou minha fé no invisível. Entendi que nunca estou sozinho; meu anjo caminha ao meu lado.
+                </p>
+            </section>
+
+            <!-- 1987: Caminhada pelo Brasil -->
+            <section id="1987d" class="chapter-card">
+                <span class="date-badge">02/09/1987</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Caminhada Pelo Brasil</h2>
+                <p class="mb-6 drop-cap">
+                    Senti que precisava caminhar. Comecei uma travessia pelo Brasil, de ônibus, de carona, a pé. Passei pelo Rio de Janeiro, Vitória, Salvador, Aracaju, Maceió, Recife, João Pessoa, Natal...
+                </p>
+                <p class="mb-6">
+                    Em Salvador, conheci o Carlos, que me ensinou a pedir esmola com dignidade. Em Recife, vi a beleza e o sofrimento. Em cada cidade, buscava um lugar, um sentido. A caminhada não foi apenas geográfica, foi uma peregrinação interior em busca de paz e pertencimento.
+                </p>
+            </section>
+
+            <!-- 1987: O Medo -->
+            <section id="1987e" class="chapter-card">
+                <span class="date-badge">10/11/1987</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Medo nas Estradas de Fernando Pedrosa</h2>
+                <p class="mb-6 drop-cap">
+                    Caminhando numa estrada deserta no Rio Grande do Norte, com fome e sede, o medo tomou conta. Ao entardecer, vi um objeto branco se movendo no pasto. Parecia um caixão flutuando. Paralisei de pavor.
+                </p>
+                <p class="mb-6">
+                    Cheguei a uma lanchonete quase desmaiando. A dona, com calma, me explicou: era um cocho de vaca, branco, que na luz da tarde parecia um caixão. Ela me deu comida e pagou minha passagem para Fortaleza. Aprendi que o maior perigo está na mente, mas a bondade humana sempre nos salva.
+                </p>
+            </section>
+
+            <!-- 1987: Fome em Fortaleza -->
+            <section id="1987f" class="chapter-card">
+                <span class="date-badge">11/11/1987</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Resto da Mesa, A Fome em Fortaleza</h2>
+                <p class="mb-6 drop-cap">
+                    Em Fortaleza, a fome apertou de verdade. Sem dinheiro, entrei numa lanchonete e esperei as pessoas saírem para comer os restos que deixavam nos pratos. Um pouco de arroz, um resto de feijão.
+                </p>
+                <p class="mb-6">
+                    Foi um momento de profunda humilhação, mas também de sobrevivência. Deus me sustentou, usando até o que o mundo jogou fora para me alimentar. Hoje, não sinto vergonha, sinto compaixão por aquele Pedro e gratidão a Deus.
+                </p>
+            </section>
+
+            <!-- 1988: Solidão -->
+            <section id="1988a" class="chapter-card">
+                <span class="date-badge">05/02/1988</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Solidão de Pedro</h2>
+                <p class="mb-6 drop-cap">
+                    A caminhada pelo Brasil foi uma travessia solitária. Mas a solidão me ensinou a encontrar Deus no silêncio. Encontrei anjos em forma humana que me deram água, pão e abrigo.
+                </p>
+                <p class="mb-6">
+                    Aprendi que a solidão não é apenas ausência, é conexão com o sagrado. É um espaço onde Deus fala quando o mundo cala. Foi na solidão que minha fé se fortaleceu e me preparou para encontrar meu lar.
+                </p>
+            </section>
+
+            <!-- 1988: Chegada em Jacareí -->
+            <section id="1988b" class="chapter-card">
+                <span class="date-badge">08/03/1988</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Chegada em Jacareí</h2>
+                <p class="mb-6 drop-cap">
+                    Em Brasília, uma mulher chamada Maria me disse: "Em Jacareí, as pessoas recebem os viajantes. Lá será seu lar". Aquilo ficou gravado.
+                </p>
+                <p class="mb-6">
+                    Cheguei em 8 de março de 1988. Um guarda municipal me indicou o albergue. Lá conheci Lucy Azevedo, assistente social, que me escutou e conseguiu meu primeiro emprego através de sua amiga Vera. Naquele momento, soube: tinha chegado em casa. Jacareí era o lugar que Deus preparou para mim.
+                </p>
+            </section>
+
+            <!-- 1988: Albergue -->
+            <section id="1988c" class="chapter-card">
+                <span class="date-badge">09/03/1988</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Albergue, a Pousada e a Casa da Nilza</h2>
+                <p class="mb-6 drop-cap">
+                    Vivi no albergue, depois numa pousada simples, e então na casa da Nilza. No albergue, conheci Inês, que me acolheu com um amor simples e verdadeiro.
+                </p>
+                <p class="mb-6">
+                    Na casa da Nilza, fui adotado por seus pais, Seu José e Dona Ana. Foi lá que comecei a rezar o terço completo todos os dias. Foi um tempo de reconstrução, onde minha fé se aprofundou e onde aprendi que a família não é só de sangue, é de alma.
+                </p>
+            </section>
+
+            <!-- 1988: Escritório -->
+            <section id="1988d" class="chapter-card">
+                <span class="date-badge">10/03/1988</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Escritório de Sidney: Onde Tudo Começou</h2>
+                <p class="mb-6 drop-cap">
+                    Comecei a trabalhar com Sidney na contabilidade em 10 de março. Morava no andar de cima do escritório, num quarto improvisado com fogão de duas bocas.
+                </p>
+                <p class="mb-6">
+                    Sidney me ensinou o ofício com paciência. Eu fazia cobranças a pé, usava o mimeógrafo a álcool e a máquina Olivetti. Foi ali que construí minha base profissional e aprendi que a precisão e a honestidade são os pilares de qualquer trabalho.
+                </p>
+            </section>
+
+            <!-- 1988: Luis Henrique -->
+            <section id="1988e" class="chapter-card">
+                <span class="date-badge">28/04/1988</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Luís Henrique: Uma Amizade Sob a Chuva</h2>
+                <p class="mb-6 drop-cap">
+                    Numa noite de tempestade em Jacareí, me abriguei sob a marquise de um bar. Luís Henrique apareceu correndo da chuva. Conversamos ali mesmo.
+                </p>
+                <p class="mb-6">
+                    Ele me convidou para sua casa próxima dali. Tomamos café enquanto a chuva caía lá fora. Foi uma amizade simples, nascida do acaso e da bondade, que me mostrou que Jacareí era uma cidade de corações abertos.
+                </p>
+            </section>
+
+            <!-- 1988: Marcos -->
+            <section id="1988f" class="chapter-card">
+                <span class="date-badge">22/06/1988</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Encontro com Marcos, o Japonês</h2>
+                <p class="mb-6 drop-cap">
+                    Conheci Marcos numa padaria. Cabelereiro, sorriso cativante, intenso. Vivemos momentos de grande conexão e intimidade.
+                </p>
+                <p class="mb-6">
+                    Infelizmente, ele se perdeu nas drogas e nossos caminhos se separaram. Mas guardo a lembrança de um homem que me fez sentir desejado e vivo. Aprendi com ele que o amor, mesmo quando passageiro, deixa marcas eternas no coração.
+                </p>
+            </section>
+
+            <!-- 1990: SAAE e Convento -->
+            <section id="1990a" class="chapter-card">
+                <span class="date-badge">22/01/1990</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Do SAAE ao Convento: A Caminhada Vocacional</h2>
+                <p class="mb-6 drop-cap">
+                    Entrei no SAAE em 1990. Trabalhei na ETA (Estação de Tratamento de Água), lá no alto, com uma vista linda da cidade. Mas minha alma buscava algo mais profundo.
+                </p>
+                <p class="mb-6">
+                    Em 1993, deixei tudo para entrar no Convento dos Frades Conventuais em Curitiba. Lá, estudei filosofia, trabalhei na roça, rezei. Aprendi a viver em comunidade. Em 1994, decidi sair. Não por fracasso, mas por entender que minha missão era servir a Deus no mundo, através do meu trabalho e da minha vida comum.
+                </p>
+            </section>
+
+            <!-- 1990: Surdez -->
+            <section id="1990b" class="chapter-card">
+                <span class="date-badge">23/01/1990</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Criança em Silêncio: A Luta Invisível</h2>
+                <p class="mb-6 drop-cap">
+                    Desde criança, sofri na escola. Me chamavam de distraído, de burro. Ficava de castigo no canto da sala. Só adulto, num exame admissional, descobri a verdade: eu tinha surdez neurossensorial.
+                </p>
+                <p class="mb-6">
+                    Aquele diagnóstico libertou minha alma. Não era culpa minha. Aprendi a ler lábios, a observar os gestos. Minha força veio desse silêncio resistente. Entendi que Deus ouviu o que ninguém ouviu e esteve comigo em cada momento de isolamento.
+                </p>
+            </section>
+
+            <!-- 1994: Retorno -->
+            <section id="1994" class="chapter-card">
+                <span class="date-badge">11/03/1994</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Retorno ao SAAE: Um Novo Propósito</h2>
+                <p class="mb-6 drop-cap">
+                    Voltei a Jacareí e prestei concurso novamente. Fui readmitido no SAAE em 15 de junho de 1994, agora como Técnico em Contabilidade.
+                </p>
+                <p class="mb-6">
+                    Voltei para a mesma mesa, para os mesmos colegas, mas com o coração transformado pela experiência no convento. Agora, meu trabalho não era apenas técnico; era uma forma de oração e serviço. Permaneci no SAAE até minha aposentadoria.
+                </p>
+            </section>
+
+            <!-- 1995: Joel -->
+            <section id="1995" class="chapter-card">
+                <span class="date-badge">05/01/1995</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Joel: O Amigo que Cuidava dos Gatos</h2>
+                <p class="mb-6 drop-cap">
+                    Joel é aquele amigo fiel que não fala muito, mas está sempre lá. Conheci-o em São José dos Campos. Ele dedica sua vida a cuidar de gatos de rua com um amor impressionante.
+                </p>
+                <p class="mb-6">
+                    Ele me acompanha nos médicos, nas doenças, nos momentos de silêncio. É uma amizade de alma. Joel me ensinou que a santidade pode estar em cuidar de um animal ferido ou em estar ao lado de um amigo que precisa.
+                </p>
+            </section>
+
+            <!-- 1999: Queda -->
+            <section id="1999" class="chapter-card">
+                <span class="date-badge">24/11/1999</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Queda, a Justiça e a Superação</h2>
+                <p class="mb-6 drop-cap">
+                    Fui nomeado Gerente de Contabilidade em 1999. Mas em 2003, fui derrubado do cargo por inveja e jogos de poder. Fiquei isolado numa sala, sem função, humilhado.
+                </p>
+                <p class="mb-6">
+                    O sofrimento foi tanto que tive um surto e derrubei a mesa ("chutei o ventilador"). Fui afastado, mas voltei. Fui transferido para a Prefeitura, recuperei minha autoestima e depois voltei ao SAAE, na Gerência de Contratos. A injustiça me feriu, mas me ensinou a confiar em Deus acima de qualquer homem.
+                </p>
+            </section>
+
+            <!-- 2000: Bebedeira -->
+            <section id="2000" class="chapter-card">
+                <span class="date-badge">03/09/2000</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Bebedeira, o Amor e a Libertação</h2>
+                <p class="mb-6 drop-cap">
+                    Houve um tempo de vazio após a volta do convento. Bebi muito. Busquei preencher o silêncio com festas. Nesse período, conheci Edvaldo, e vivemos juntos por nove anos.
+                </p>
+                <p class="mb-6">
+                    Foi um tempo de aprendizado e amor, mas também de luta. Em 2007, tomei a decisão de parar de beber. Foi minha libertação. Voltei a rezar com força. Deus nunca me largou, mesmo quando eu me perdi, e me trouxe de volta para a luz.
+                </p>
+            </section>
+
+            <!-- 2001: Silvana -->
+            <section id="2001" class="chapter-card">
+                <span class="date-badge">26/11/2001</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Silvana: A Amizade de 25 Anos</h2>
+                <p class="mb-6 drop-cap">
+                    Conheci Silvana na Prefeitura. Economista, competente, humana. Voltamos a trabalhar juntos na Regulação anos depois.
+                </p>
+                <p class="mb-6">
+                    Silvana é uma constante em minha vida. Mulher de caráter, dedicada à família e ao trabalho. Nossa amizade atravessou décadas sem perder o valor. Ela me ensinou que a competência não precisa de arrogância e que a amizade verdadeira resiste ao tempo.
+                </p>
+            </section>
+
+            <!-- 2009: Fatima -->
+            <section id="2009a" class="chapter-card">
+                <span class="date-badge">12/01/2009</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Fátima: A Amiga que Subiu Comigo</h2>
+                <p class="mb-6 drop-cap">
+                    Fátima trabalhou comigo no SAAE. Vi ela crescer na carreira por mérito puro, chegando a Diretora. Mas, mesmo no topo, nunca perdeu a humildade.
+                </p>
+                <p class="mb-6">
+                    Ela me apoiou nos momentos mais difíceis, quando eu duvidava de mim mesmo. Foi uma irmã de jornada que me mostrou que o crescimento profissional não precisa ser solitário.
+                </p>
+            </section>
+
+            <!-- 2009: Claudia -->
+            <section id="2009b" class="chapter-card">
+                <span class="date-badge">12/01/2009</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Cláudia: A Amiga das Horas Todas</h2>
+                <p class="mb-6 drop-cap">
+                    Cláudia, enfermeira do SAAE. Nossas conversas começaram no fumódromo e viraram uma amizade para a vida.
+                </p>
+                <p class="mb-6">
+                    Almoços, conselhos, orações. Cláudia é presença de Deus em minha vida. Uma mulher de fé que me escuta sem julgar e me fortalece com sua bondade. Escrevi até uma música para ela, em gratidão por sua presença constante.
+                </p>
+            </section>
+
+            <!-- 2009: Susana -->
+            <section id="2009c" class="chapter-card">
+                <span class="date-badge">19/01/2009</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Susana: A Amiga da Contabilidade e da Vida</h2>
+                <p class="mb-6 drop-cap">
+                    Trabalhamos juntos na Gerência de Contratos. Susana me incentivou a fazer a faculdade de Ciências Contábeis quando eu achava que não conseguia mais estudar.
+                </p>
+                <p class="mb-6">
+                    Fizemos o curso juntos, nos apoiamos. Cheguei a morar na casa dela por um tempo. Susana é uma mulher de luta e dignidade, que me ensinou que a força não precisa ser barulhenta.
+                </p>
+            </section>
+
+            <!-- 2010: Neusa -->
+            <section id="2010" class="chapter-card">
+                <span class="date-badge">10/03/2010</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Neusa, A Amiga dos Cachorros e das Canções</h2>
+                <p class="mb-6 drop-cap">
+                    Neusa era minha vizinha no Cassununga. Cantávamos alto para espantar as energias ruins. Quando ela mudou para Natal, assumi o cuidado dos cachorros dela, Dinho e Nina.
+                </p>
+                <p class="mb-6">
+                    Cuidei deles até o fim, como uma promessa. Aprendi com Neusa e com esses animais que o amor também se manifesta no cuidado com a criação de Deus.
+                </p>
+            </section>
+
+            <!-- 2013: Eduardo -->
+            <section id="2013a" class="chapter-card">
+                <span class="date-badge">10/05/2013</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Eduardo: O Homem do Silêncio Marcante</h2>
+                <p class="mb-6 drop-cap">
+                    Eduardo entrou na minha vida em 2013. Um homem reservado, forte, um enigma. Nossos encontros eram feitos de silêncio e cumplicidade na Rua São Diego e depois na Rua Lamartine.
+                </p>
+                <p class="mb-6">
+                    Ele me ensinou que a presença vale mais que mil palavras e que o amor não precisa ser barulhento para ser verdadeiro. O mistério dele foi o que me manteve próximo.
+                </p>
+            </section>
+
+            <!-- 2013: Leandro -->
+            <section id="2013b" class="chapter-card">
+                <span class="date-badge">26/11/2013</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Leandro: O Cara que Marcou Minha Vida</h2>
+                <p class="mb-6 drop-cap">
+                    Fui buscar Leandro em Boiçucanga em 2014. Ele vive com esquizofrenia, mas tem um coração gigante. Vivemos momentos intensos, viagens ao Paraguai, natais juntos.
+                </p>
+                <p class="mb-6">
+                    Hoje somos amigos irmãos. Leandro me ensinou que cuidar do outro é um ato de fé e que a amizade verdadeira sobrevive a qualquer dificuldade.
+                </p>
+            </section>
+
+            <!-- 2015: Estudos -->
+            <section id="2015" class="chapter-card">
+                <span class="date-badge">04/08/2015</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Noites de Estudo e a Simpatia do Rio</h2>
+                <p class="mb-6 drop-cap">
+                    Lembro-me das noites estudando à luz de lamparina na infância. E de uma "simpatia" que fiz quando jovem: joguei uma foto no rio pedindo que nunca me faltasse trabalho.
+                </p>
+                <p class="mb-6">
+                    E nunca faltou. A fé e o estudo sempre andaram juntos na minha vida. Formei-me em Contabilidade e fiz pós-graduação, provando que o sonho do menino do campo se realizou.
+                </p>
+            </section>
+
+            <!-- 2016: 50 Anos -->
+            <section id="2016" class="chapter-card">
+                <span class="date-badge">27/08/2016</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Tempo que Passa: Reflexões aos 50 Anos</h2>
+                <p class="mb-6 drop-cap">
+                    Aos 50 anos, parei para olhar para trás. Não com tristeza, mas com gratidão. Entendi que a vida não é sobre ter, é sobre ser. Sobre amar e servir.
+                </p>
+                <p class="mb-6">
+                    O tempo é mestre. A fé foi meu chão em cada fase. E as pessoas que ficaram — família e amigos verdadeiros — são meu maior tesouro.
+                </p>
+            </section>
+
+            <!-- 2018: Aposentadoria -->
+            <section id="2018" class="chapter-card">
+                <span class="date-badge">03/09/2018</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Aposentadoria: O Fim de um Tempo</h2>
+                <p class="mb-6 drop-cap">
+                    Aposentei-me do SAAE em 3 de setembro de 2018, após mais de 24 anos de serviço. Não foi o fim, foi uma transição.
+                </p>
+                <p class="mb-6">
+                    Agora dedico meu tempo à oração, à escrita deste livro e aos amigos. Parei de fumar em julho de 2018, uma libertação. Uma nova vida começou, focada no essencial.
+                </p>
+            </section>
+
+            <!-- 2019: Rua Hollywood -->
+            <section id="2019" class="chapter-card">
+                <span class="date-badge">10/08/2019</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Rua Hollywood: O Lar que Conquistei</h2>
+                <p class="mb-6 drop-cap">
+                    Finalmente, comprei meu apartamento na Rua Hollywood. Depois de tantos albergues, pensões e quartos alugados, finalmente tinha meu chão.
+                </p>
+                <p class="mb-6">
+                    É meu lugar de paz e oração. Transformei meu lar num santuário onde rezo todos os dias. Olho pela janela e agradeço a Deus por ter me dado um lugar para dizer: "Estou em casa".
+                </p>
+            </section>
+
+            <!-- 2020: Jeovani -->
+            <section id="2020" class="chapter-card">
+                <span class="date-badge">04/04/2020</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Jeovani: A Amizade da Cerveja e da Alegria</h2>
+                <p class="mb-6 drop-cap">
+                    Conheci Jeovani em 2020. Uma amizade leve e divertida. Ele traz a cerveja e a batata Ruffles, eu a companhia.
+                </p>
+                <p class="mb-6">
+                    Ele me ensinou a rir e a aproveitar os momentos simples da vida. Mesmo sendo diferentes, nossa amizade é um presente que torna a vida mais colorida.
+                </p>
+            </section>
+
+            <!-- 2022: Amilton -->
+            <section id="2022" class="chapter-card">
+                <span class="date-badge">25/02/2022</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Amilton: A Lição da Simplicidade</h2>
+                <p class="mb-6 drop-cap">
+                    Em Caraguatatuba, conheci Amilton. Um homem que vive com pouco, numa casa simples, mas tem tudo. Sua paz e seu jeito calmo me mostraram a verdadeira riqueza.
+                </p>
+                <p class="mb-6">
+                    Passei 15 dias em sua casa e aprendi que viver autêntico, sem máscaras e em harmonia com a natureza, é o segredo da felicidade.
+                </p>
+            </section>
+
+            <!-- 2023: Frei Sidney -->
+            <section id="2023a" class="chapter-card">
+                <span class="date-badge">21/03/2023</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Frei Sidney e a Espiritualidade Franciscana</h2>
+                <p class="mb-6 drop-cap">
+                    Na pós-graduação, Frei Sidney não foi só professor, foi mestre de vida. Ensinou-me a espiritualidade de São Francisco: simplicidade, humildade e paz.
+                </p>
+                <p class="mb-6">
+                    Aprendi que "Francisco não venceu o mundo com força, venceu com amor". Essa lição mudou minha forma de ver a fé e o mundo.
+                </p>
+            </section>
+
+            <!-- 2023: Conversão -->
+            <section id="2023b" class="chapter-card">
+                <span class="date-badge">15/10/2023</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">A Conversão Definitiva e a Ordem do Carmo</h2>
+                <p class="mb-6 drop-cap">
+                    Encontrei meu porto seguro na Ordem Terceira do Carmo. Não como frade, mas como leigo consagrado. Uso o escapulário e rezo todos os dias.
+                </p>
+                <p class="mb-6">
+                    Minha alma finalmente encontrou casa. Conheci irmãos de fé como Prior Tiago e Irmã Jô. A conversão foi um processo lento, mas definitivo. Hoje, vivo no mundo com o coração no céu.
+                </p>
+            </section>
+
+            <!-- 2024: Café com Silvana -->
+            <section id="2024a" class="chapter-card">
+                <span class="date-badge">13/03/2024</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Café e as Flores na Casa de Silvana</h2>
+                <p class="mb-6 drop-cap">
+                    Na casa da Silvana, um café simples e um buquê de flores colhidas no jardim. Gestos pequenos que mostram que Deus mora nos detalhes.
+                </p>
+                <p class="mb-6">
+                    A beleza está na simplicidade. A amizade verdadeira não precisa de grandes gestos, apenas de presença e carinho genuíno.
+                </p>
+            </section>
+
+            <!-- 2024: Ilma -->
+            <section id="2024b" class="chapter-card">
+                <span class="date-badge">03/09/2024</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Ilma: O Amor que Não Pôde Ser</h2>
+                <p class="mb-6 drop-cap">
+                    Ilma se apaixonou por mim. Eu fui honesto e disse não ao romance, mas sim à amizade. Foi uma prova de maturidade e respeito mútuo.
+                </p>
+                <p class="mb-6">
+                    Mantivemos a dignidade e o carinho. Aprendi que o amor humano pode ser belo, mas precisa de limites, e que a amizade verdadeira pode sobreviver à paixão não correspondida.
+                </p>
+            </section>
+
+            <!-- 2024: Casa de Esperança -->
+            <section id="2024c" class="chapter-card">
+                <span class="date-badge">26/09/2024</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Sonho: Casa de Esperança de São Francisco</h2>
+                <p class="mb-6 drop-cap">
+                    Meu grande sonho: criar um lugar para acolher quem não tem ninguém. A "Casa de Esperança". Um abrigo com dignidade, inspirado em São Francisco.
+                </p>
+                <p class="mb-6">
+                    Rezo todos os dias para que Deus realize essa obra através de mim. Quero que seja um farol de luz em Jacareí, um lugar onde o pobre seja tratado como irmão.
+                </p>
+            </section>
+
+            <!-- 2024: Gratidão -->
+            <section id="2024d" class="chapter-card">
+                <span class="date-badge">20/11/2024</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Gratidão: Um Coração que Transborda</h2>
+                <p class="mb-6 drop-cap">
+                    Hoje, meu coração transborda. Agradeço a minha família, meus amigos, meus médicos, meus colegas. Cada um foi um pedaço de Deus na minha vida.
+                </p>
+                <p class="mb-6">
+                    Às minhas irmãs, aos amigos de Jacareí, à minha família de fé no Carmo. Obrigado por caminharem comigo. Sou quem sou por causa de vocês.
+                </p>
+            </section>
+
+            <!-- 2024: Um Dia de Ordem -->
+            <section id="2024e" class="chapter-card">
+                <span class="date-badge">17/12/2024</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Um Dia de Ordem, Cuidado e Generosidade</h2>
+                <p class="mb-6 drop-cap">
+                    Relato de um dia comum: farmácia, almoço com Cláudia, doação do meu aparelho auditivo antigo na Cruzada. Um dia simples, mas cheio de significado e serviço.
+                </p>
+                <p class="mb-6">
+                    Mostrei que é possível equilibrar saúde, amizade e fé. Terminei o dia em oração, com o coração leve e grato.
+                </p>
+            </section>
+
+            <!-- 2025: O Tratamento -->
+            <section id="2025a" class="chapter-card">
+                <span class="date-badge">06/02/2025</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">O Tratamento do Espírito Santo e a Dor Física</h2>
+                <p class="mb-6 drop-cap">
+                    A artrose no joelho trouxe dor física. Mas o Espírito Santo me ensinou a sofrer com paz. A dor não é castigo, é um chamado para parar e ouvir Deus.
+                </p>
+                <p class="mb-6">
+                    No meio do tratamento médico, encontrei a cura da alma. Aprendi que não preciso ser forte o tempo todo e que Deus me carrega quando não posso andar.
+                </p>
+            </section>
+
+            <!-- 2025: Muito Obrigado -->
+            <section id="2025b" class="chapter-card">
+                <span class="date-badge">19/08/2025</span>
+                <h2 class="text-3xl font-title mb-8 text-sky-900">Meu Muito Obrigado a Todos</h2>
+                <p class="mb-6 drop-cap">
+                    Chego aqui com o coração em paz. Agradeço a Deus por tudo. Pela estrada, pela fome, pelo amor, pela dor. Valeu a pena viver.
+                </p>
+                <p class="mb-6">
+                    Esta não é o fim da história, mas uma pausa para agradecer. A história continua nas orações e nos sonhos que ainda virão. "Aqui estou, Senhor. Pequeno. Humilde. Teu."
+                </p>
+                <blockquote class="prayer font-bold text-xl">"Que a paz de Cristo reine em todos os corações."</blockquote>
+            </section>
+
+            <!-- Trajetória -->
+            <section id="trajetoria" class="chapter-card bg-sky-50 border-none">
+                <h2 class="text-3xl font-title mb-8 text-sky-900 text-center">Trajetória e Currículo</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-sky-700 mb-4">Formação</h3>
+                        <ul class="list-disc ml-5 space-y-2 text-sm">
+                            <li>Escola Felipe dos Santos (1975-1978)</li>
+                            <li>Técnico em Contabilidade (1985)</li>
+                            <li>Graduação em Ciências Contábeis (2016)</li>
+                            <li>Pós em Espiritualidade Franciscana (2024)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-sky-700 mb-4">Trabalho</h3>
+                        <ul class="list-disc ml-5 space-y-2 text-sm">
+                            <li>Lanchonetes e Fábrica de Calçados (Início)</li>
+                            <li>Banco Itaú (1986-1987)</li>
+                            <li>SAAE de Jacareí (1990-1993 / 1994-2018)</li>
+                            <li>Aposentadoria por tempo de serviço (2018)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
 
-    <script>
-        // Função para mudar a página do PDF
-        function goToPage(pageNum, btnElement) {
-            // Nome do arquivo PDF (deve ser igual ao que você subir no GitHub)
-            const pdfName = "livro.pdf"; 
-            
-            const frame = document.getElementById('pdf-frame');
-            
-            // Atualiza o link do iframe forçando a recarga na página certa
-            // O parâmetro #page=X funciona na maioria dos leitores de PDF de navegadores
-            frame.src = `${pdfName}#page=${pageNum}&view=FitH`;
+    <footer class="bg-sky-900 text-sky-100 py-12 text-center border-t-8 border-sky-500">
+        <div class="max-w-4xl mx-auto px-4">
+            <p class="font-title text-2xl mb-4">Minha História, Minha Vida</p>
+            <p class="text-sm opacity-80">© 2025 Pedro Gonçalves Ribeiro - Jacareí, SP</p>
+            <p class="text-xs mt-4 text-sky-300">"O Senhor é meu pastor e nada me faltará."</p>
+        </div>
+    </footer>
 
-            // Atualiza estilo dos botões
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
-            btnElement.classList.add('active-chapter');
-        }
-
-        // Verificação simples se o arquivo existe (opcional)
-        window.onload = function() {
-            // Marca o primeiro botão como ativo
-            const firstBtn = document.querySelector('.nav-btn');
-            if(firstBtn) firstBtn.classList.add('active-chapter');
-        };
-    </script>
 </body>
 </html>
