@@ -172,18 +172,18 @@
         </div>
     </div>
 
-    <script>
+  <script>
         function goToPage(pageNum, btnElement) {
-            // Nome do arquivo PDF (deve ser igual ao que você subiu)
             const pdfName = "livro.pdf"; 
-            
             const frame = document.getElementById('pdf-frame');
             
-            // Atualiza o iframe para abrir na página desejada
-            // Nota: Alguns navegadores podem não pular se o arquivo for muito grande ou estiver carregando
-            frame.src = `${pdfName}#page=${pageNum}&view=FitH`;
+            // --- O TRUQUE ESTÁ AQUI ---
+            // Adicionamos um número aleatório (Date.now) no link.
+            // Isso faz o navegador achar que é um arquivo "novo" e força ele a ir para a página.
+            // O formato fica: livro.pdf?v=123456#page=10
+            frame.src = `${pdfName}?v=${Date.now()}#page=${pageNum}&view=FitH`;
 
-            // Destaca o botão clicado
+            // Destaca o botão clicado (Visual)
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
             if(btnElement) btnElement.classList.add('active-chapter');
         }
