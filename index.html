@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor: Minha História, Minha Vida</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background-color: #f0f9ff; height: 100vh; margin: 0; display: flex; flex-direction: column; }
+        
+        /* Layout para Desktop: Lado a Lado */
+        @media (min-width: 1024px) {
+            body { flex-direction: row; }
+            #sidebar { width: 350px; height: 100vh; overflow-y: auto; }
+            #pdf-container { flex-grow: 1; height: 100vh; }
+        }
+
+        /* Layout para Mobile: Menu em cima, PDF embaixo */
+        @media (max-width: 1023px) {
+            #sidebar { width: 100%; height: 30vh; overflow-y: auto; }
+            #pdf-container { width: 100%; height: 70vh; }
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 10px 15px;
+            border-bottom: 1px solid #bae6fd;
+            color: #0c4a6e;
+            transition: background 0.2s;
+            background: white;
+            font-size: 0.9rem;
+        }
+        .nav-btn:hover { background-color: #e0f2fe; color: #0284c7; font-weight: bold; }
+        .active-chapter { background-color: #0284c7; color: white !important; }
+        
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <!-- ÍNDICE LATERAL -->
+    <div id="sidebar" class="bg-white border-r border-sky-200 shadow-lg z-10">
+        <div class="p-4 bg-sky-100 border-b border-sky-300 sticky top-0">
+            <h1 class="text-lg font-bold text-sky-900">Índice do Livro</h1>
+            <p class="text-xs text-sky-700">Clique para ler o capítulo</p>
+        </div>
+        
+        <!-- Lista de Capítulos (Ajuste o número da página no 'data-page') -->
+        <!-- Exemplo: data-page="10" vai para a página 10 do PDF -->
+        <nav id="chapter-list">
+            <button class="nav-btn" onclick="goToPage(1, this)">Capa</button>
+            <button class="nav-btn" onclick="goToPage(6, this)">Prefácio: A Vida como Testemunho</button>
+            <button class="nav-btn" onclick="goToPage(9, this)">Introdução: No Silêncio, Deus Fala</button>
+            <button class="nav-btn" onclick="goToPage(10, this)">1965: Meus Pais</button>
+            <button class="nav-btn" onclick="goToPage(14, this)">1966: Raízes e Nascimento</button>
+            <button class="nav-btn" onclick="goToPage(21, this)">1974: A Luz da Lamparina</button>
+            <button class="nav-btn" onclick="goToPage(26, this)">1977: O Menino que Voltou</button>
+            <button class="nav-btn" onclick="goToPage(31, this)">1980: Primeiros Passos</button>
+            <button class="nav-btn" onclick="goToPage(36, this)">1982: O Despertar</button>
+            <button class="nav-btn" onclick="goToPage(43, this)">1982: Cecy, Raízes e Asas</button>
+            <button class="nav-btn" onclick="goToPage(49, this)">1986: A Fábrica de Calçados</button>
+            <button class="nav-btn" onclick="goToPage(54, this)">1986: Rita Carretel e a Ida para SP</button>
+            <button class="nav-btn" onclick="goToPage(58, this)">1986: Vida Corrida e Banco Itaú</button>
+            <button class="nav-btn" onclick="goToPage(61, this)">1987: Márcia e Silvia</button>
+            <button class="nav-btn" onclick="goToPage(66, this)">1987: Inácio</button>
+            <button class="nav-btn" onclick="goToPage(70, this)">1987: O Anjo da Guarda</button>
+            <button class="nav-btn" onclick="goToPage(79, this)">1987: Caminhada pelo Brasil</button>
+            <button class="nav-btn" onclick="goToPage(87, this)">1987: O Medo na Estrada</button>
+            <button class="nav-btn" onclick="goToPage(96, this)">1987: A Fome em Fortaleza</button>
+            <button class="nav-btn" onclick="goToPage(99, this)">1988: A Solidão</button>
+            <button class="nav-btn" onclick="goToPage(106, this)">1988: Chegada em Jacareí</button>
+            <button class="nav-btn" onclick="goToPage(115, this)">1988: Albergue e Pousada</button>
+            <button class="nav-btn" onclick="goToPage(124, this)">1988: Escritório de Sidney</button>
+            <button class="nav-btn" onclick="goToPage(130, this)">1988: Luís Henrique</button>
+            <button class="nav-btn" onclick="goToPage(137, this)">1988: Marcos</button>
+            <button class="nav-btn" onclick="goToPage(144, this)">1990: SAAE e Convento</button>
+            <button class="nav-btn" onclick="goToPage(152, this)">1990: A Criança em Silêncio</button>
+            <button class="nav-btn" onclick="goToPage(158, this)">1994: Retorno ao SAAE</button>
+            <button class="nav-btn" onclick="goToPage(162, this)">1995: Joel e os Gatos</button>
+            <button class="nav-btn" onclick="goToPage(167, this)">1999: A Queda e a Justiça</button>
+            <button class="nav-btn" onclick="goToPage(175, this)">2000: Bebedeira e Amor</button>
+            <button class="nav-btn" onclick="goToPage(183, this)">2001: Silvana</button>
+            <button class="nav-btn" onclick="goToPage(187, this)">2009: Fátima</button>
+            <button class="nav-btn" onclick="goToPage(191, this)">2009: Cláudia</button>
+            <button class="nav-btn" onclick="goToPage(197, this)">2009: Susana</button>
+            <button class="nav-btn" onclick="goToPage(202, this)">2010: Neusa</button>
+            <button class="nav-btn" onclick="goToPage(208, this)">2013: Eduardo</button>
+            <button class="nav-btn" onclick="goToPage(213, this)">2013: Leandro</button>
+            <button class="nav-btn" onclick="goToPage(218, this)">2015: Noites de Estudo</button>
+            <button class="nav-btn" onclick="goToPage(222, this)">2016: Reflexões aos 50</button>
+            <button class="nav-btn" onclick="goToPage(226, this)">2018: A Aposentadoria</button>
+            <button class="nav-btn" onclick="goToPage(231, this)">2019: Rua Hollywood</button>
+            <button class="nav-btn" onclick="goToPage(235, this)">2020: Jeovani</button>
+            <button class="nav-btn" onclick="goToPage(242, this)">2022: Amilton</button>
+            <button class="nav-btn" onclick="goToPage(246, this)">2023: Frei Sidney</button>
+            <button class="nav-btn" onclick="goToPage(250, this)">2023: Conversão e Carmo</button>
+            <button class="nav-btn" onclick="goToPage(253, this)">2024: Café com Silvana</button>
+            <button class="nav-btn" onclick="goToPage(255, this)">2024: Ilma</button>
+            <button class="nav-btn" onclick="goToPage(260, this)">2024: Casa de Esperança</button>
+            <button class="nav-btn" onclick="goToPage(265, this)">2024: Gratidão</button>
+            <button class="nav-btn" onclick="goToPage(270, this)">2024: Um Dia de Ordem</button>
+            <button class="nav-btn" onclick="goToPage(276, this)">2025: O Tratamento</button>
+            <button class="nav-btn" onclick="goToPage(280, this)">2025: Muito Obrigado</button>
+            <button class="nav-btn" onclick="goToPage(292, this)">Trajetória e Currículo</button>
+        </nav>
+    </div>
+
+    <!-- ÁREA DE LEITURA DO PDF -->
+    <div id="pdf-container" class="bg-gray-200 relative">
+        <!-- Substitua 'livro.pdf' pelo nome EXATO do seu arquivo no GitHub -->
+        <iframe id="pdf-frame" src="livro.pdf#page=1&view=FitH" title="Leitor de PDF"></iframe>
+        
+        <!-- Aviso caso o PDF não carregue -->
+        <div id="no-pdf" class="hidden absolute inset-0 flex items-center justify-center bg-white p-8 text-center">
+            <div>
+                <h3 class="text-xl font-bold text-red-600 mb-2">PDF Não Encontrado</h3>
+                <p>Certifique-se de que o arquivo do livro está no repositório com o nome correto.</p>
+                <p class="text-sm text-gray-500 mt-4">Nome esperado: <strong>livro.pdf</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para mudar a página do PDF
+        function goToPage(pageNum, btnElement) {
+            // Nome do arquivo PDF (deve ser igual ao que você subir no GitHub)
+            const pdfName = "livro.pdf"; 
+            
+            const frame = document.getElementById('pdf-frame');
+            
+            // Atualiza o link do iframe forçando a recarga na página certa
+            // O parâmetro #page=X funciona na maioria dos leitores de PDF de navegadores
+            frame.src = `${pdfName}#page=${pageNum}&view=FitH`;
+
+            // Atualiza estilo dos botões
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
+            btnElement.classList.add('active-chapter');
+        }
+
+        // Verificação simples se o arquivo existe (opcional)
+        window.onload = function() {
+            // Marca o primeiro botão como ativo
+            const firstBtn = document.querySelector('.nav-btn');
+            if(firstBtn) firstBtn.classList.add('active-chapter');
+        };
+    </script>
+</body>
+</html>
